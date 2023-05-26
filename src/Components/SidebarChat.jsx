@@ -2,15 +2,20 @@ import { Avatar } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import "./SidebarChat.css";
 
-const SidebarChat = ({ addNewChat }) => {
+// add new chat
+const SidebarChat = ({ addNewChat, name }) => {
+  // profile image state
   const [randomImage, setRandomImage] = useState();
 
+  // find a random image from unsplash db
   useEffect(() => {
     setRandomImage(Math.floor(Math.random() * 1000));
   }, []);
   console.log(randomImage);
 
+  // function to actually create the chat
   const createChat = () => {
+    // taking in name for chat
     const name = prompt("Please enter a name for chat");
 
     if (name) {
@@ -25,7 +30,7 @@ const SidebarChat = ({ addNewChat }) => {
         sx={{ width: 56, height: 56 }}
       />
       <div className="sidebar_chat_info">
-        <h3>Name</h3>
+        <h3>{name}</h3>
         <p>Last message....</p>
       </div>
     </div>

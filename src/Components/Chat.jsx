@@ -19,10 +19,10 @@ const Chat = () => {
   const sendMessage = (e) => {
     e.preventDefault();
     console.log("You typed =>", inputMessage);
+    setInputMessage("");
   };
 
   const [inputMessage, setInputMessage] = useState("");
-  console.log(inputMessage);
 
   return (
     <div className="chat">

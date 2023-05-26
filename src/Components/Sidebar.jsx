@@ -1,4 +1,6 @@
 import React from "react";
+import db from "./Firebase";
+import { useEffect } from "react";
 import "./Sidebar.css";
 import Avatar from "@mui/material/Avatar";
 import { IconButton } from "@mui/material";
@@ -7,8 +9,29 @@ import ChatIcon from "@mui/icons-material/Chat";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SearchIcon from "@mui/icons-material/Search";
 import SidebarChat from "./SidebarChat";
+import { collection, onSnapshot } from "firebase/firestore";
 
 const Sidebar = () => {
+  // state to store all the rooms
+  const [rooms, setRooms] = React.useState([]);
+
+  // fetching all data of rooms from database into rooms state
+  useEffect(() => {
+    // adding an event listener to rooms collection from db and taking a snapshot
+    onSnapshot(collection(db, "rooms"), (snapshot) => {
+      // setting the value of rooms state
+      setRooms(
+        // mapping over the docs inside snapshot and for every element
+        // returning its id and data to store in our state
+        snapshot.docs.map((x) => ({
+          id: x.id,
+          data: x.data(),
+        }))
+      );
+    });
+  }, []);
+  console.log(rooms);
+
   return (
     <div className="sidebar">
       {/* displays the company name and logo etc. on top of sidebar */}
@@ -38,8 +61,9 @@ const Sidebar = () => {
       {/* List of all the chats  */}
       <div className="sidebar_chats">
         <SidebarChat addNewChat />
-        <SidebarChat />
-        <SidebarChat />
+        {rooms.map((x) => (
+          <SidebarChat key={x.id} name={x.data.name} id={x.id} />
+        ))}
       </div>
     </div>
   );
