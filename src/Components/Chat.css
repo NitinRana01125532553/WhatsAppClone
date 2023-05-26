@@ -71,3 +71,44 @@
     font-size: 12px;
     margin-left: 10px;
 }
+
+.chat_reciever {
+    margin-left: auto;
+    background-color: #00a884;
+}
+
+.chat_footer {
+    display: flex;
+    background-color: #111b21;
+    padding: 10px;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(121, 121, 121, 0.2);
+}
+
+.chat_footer .MuiSvgIcon-root {
+    color: grey;
+    padding: 2px;
+}
+
+.chat_footer form input {
+    background-color: #0a1014;
+    border: none;
+    border-radius: 20px;
+    padding: 10px;
+    padding-left: 20px;
+    flex: 0.99;
+    color: white;
+    outline: none;
+}
+
+.chat_footer form {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat_footer button {
+    display: none;
+}
