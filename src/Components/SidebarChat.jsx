@@ -1,6 +1,8 @@
 import { Avatar } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import "./SidebarChat.css";
+import { addDoc, collection } from "firebase/firestore";
+import db from "./Firebase";
 
 // add new chat
 const SidebarChat = ({ addNewChat, name }) => {
@@ -19,7 +21,9 @@ const SidebarChat = ({ addNewChat, name }) => {
     const name = prompt("Please enter a name for chat");
 
     if (name) {
-      // store the name into database;
+      addDoc(collection(db, "rooms"), {
+        name: name,
+      });
     }
   };
 

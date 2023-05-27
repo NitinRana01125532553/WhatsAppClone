@@ -8,21 +8,26 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import MicIcon from "@mui/icons-material/Mic";
+import db from "./Firebase";
 
+// the actual chat section of users
 const Chat = () => {
+  // to hold the random profile image
   const [randomImage, setRandomImage] = useState();
+  // the text entered by user to send
+  const [inputMessage, setInputMessage] = useState("");
 
+  // finding a random number and assignining to state
   useEffect(() => {
     setRandomImage(Math.floor(Math.random() * 1000));
   }, []);
 
+  // function to send message
   const sendMessage = (e) => {
     e.preventDefault();
     console.log("You typed =>", inputMessage);
     setInputMessage("");
   };
-
-  const [inputMessage, setInputMessage] = useState("");
 
   return (
     <div className="chat">
