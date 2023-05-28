@@ -30,7 +30,7 @@ const Chat = () => {
   // finding a random number and assignining to state
   useEffect(() => {
     setRandomImage(Math.floor(Math.random() * 1000));
-  }, []);
+  }, [roomId]);
 
   // function to send message
   const sendMessage = (e) => {
