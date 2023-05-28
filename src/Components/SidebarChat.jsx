@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import "./SidebarChat.css";
 import { addDoc, collection } from "firebase/firestore";
 import db from "./Firebase";
+import { Link } from "react-router-dom";
 
 // add new chat
-const SidebarChat = ({ addNewChat, name }) => {
+const SidebarChat = ({ id, addNewChat, name }) => {
   // profile image state
   const [randomImage, setRandomImage] = useState();
 
@@ -28,16 +29,18 @@ const SidebarChat = ({ addNewChat, name }) => {
   };
 
   return !addNewChat ? (
-    <div className="sidebar_chat">
-      <Avatar
-        src={`https://source.unsplash.com/random/?person&${randomImage}`}
-        sx={{ width: 56, height: 56 }}
-      />
-      <div className="sidebar_chat_info">
-        <h3>{name}</h3>
-        <p>Last message....</p>
+    <Link to={`/rooms/${id}`}>
+      <div className="sidebar_chat">
+        <Avatar
+          src={`https://source.unsplash.com/random/?person&${randomImage}`}
+          sx={{ width: 56, height: 56 }}
+        />
+        <div className="sidebar_chat_info">
+          <h3>{name}</h3>
+          <p>Last message....</p>
+        </div>
       </div>
-    </div>
+    </Link>
   ) : (
     <div onClick={createChat} className="sidebar_chat">
       <h3>add new chat</h3>

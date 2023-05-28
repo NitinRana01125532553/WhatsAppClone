@@ -9,6 +9,8 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import MicIcon from "@mui/icons-material/Mic";
 import db from "./Firebase";
+import { useParams } from "react-router-dom";
+import { collection, doc, onSnapshot } from "firebase/firestore";
 
 // the actual chat section of users
 const Chat = () => {
@@ -16,6 +18,14 @@ const Chat = () => {
   const [randomImage, setRandomImage] = useState();
   // the text entered by user to send
   const [inputMessage, setInputMessage] = useState("");
+  const { roomId } = useParams();
+  const [roomName, setRoomName] = useState("");
+
+  useEffect(() => {
+    onSnapshot(doc(db, "rooms", roomId), (snapshot) => {
+      setRoomName(snapshot.data().name);
+    });
+  }, [roomId]);
 
   // finding a random number and assignining to state
   useEffect(() => {
@@ -38,7 +48,7 @@ const Chat = () => {
         />
 
         <div className="chat_header_info">
-          <h3>Name</h3>
+          <h3>{roomName}</h3>
           <p>Last seen at ....</p>
         </div>
 
