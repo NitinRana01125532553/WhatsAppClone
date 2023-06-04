@@ -1,16 +1,24 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./Login.css";
-import { Button } from "@mui/material";
+import { Button, dialogActionsClasses } from "@mui/material";
 import { auth, provider } from "./Firebase";
 import { signInWithPopup } from "firebase/auth";
+import { useStateValue } from "../StateProvider";
+import { actionTypes } from "../reducer";
 
 const Login = () => {
+  const [{}, dispatch] = useStateValue();
   // function to make sign in
   const signIn = () => {
     // signin popup
     signInWithPopup(auth, provider)
       // to log user info
-      .then((result) => console.log(result))
+      .then((result) =>
+        dispatch({
+          type: actionTypes.SET_USER,
+          user: result.user,
+        })
+      )
       // for catching and displaying errors
       .catch((err) => alert(err.message));
   };

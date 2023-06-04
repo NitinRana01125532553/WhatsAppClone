@@ -10,10 +10,12 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import SearchIcon from "@mui/icons-material/Search";
 import SidebarChat from "./SidebarChat";
 import { collection, onSnapshot } from "firebase/firestore";
+import { useStateValue } from "../StateProvider";
 
 const Sidebar = () => {
   // state to store all the rooms
   const [rooms, setRooms] = React.useState([]);
+  const [{ user }, dispatch] = useStateValue();
 
   // fetching all data of rooms from database into rooms state
   useEffect(() => {
@@ -36,7 +38,7 @@ const Sidebar = () => {
     <div className="sidebar">
       {/* displays the company name and logo etc. on top of sidebar */}
       <header className="sidebar_header">
-        <Avatar />
+        <Avatar src={user?.photoURL} />
         <div className="sidebar_header_right">
           <IconButton>
             <DonutLargeIcon />
