@@ -10,7 +10,13 @@ import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import MicIcon from "@mui/icons-material/Mic";
 import db from "./Firebase";
 import { useParams } from "react-router-dom";
-import { collection, doc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 
 // the actual chat section of users
 const Chat = () => {
@@ -20,12 +26,32 @@ const Chat = () => {
   const [inputMessage, setInputMessage] = useState("");
   const { roomId } = useParams();
   const [roomName, setRoomName] = useState("");
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    onSnapshot(doc(db, "rooms", roomId), (snapshot) => {
-      setRoomName(snapshot.data().name);
-    });
+    if (roomId) {
+      onSnapshot(doc(db, "rooms", roomId), (snapshot) => {
+        setRoomName(snapshot.data().name);
+      });
+
+      // access the message properties inside message doc in messages sub-collection
+      //inside rooms doc inside rooms collection
+
+      // accessing rooms collection
+      const roomsCol = collection(db, "rooms");
+      // accessing the different room docs inside rooms collection
+      const roomDoc = doc(roomsCol, roomId);
+      // accessing the messages collection inside each room doc
+      const messagesCol = collection(roomDoc, "messages");
+      // ordering messages collection by timestamp
+      const messageDoc = query(messagesCol, orderBy("timeStamp", "asc"));
+
+      onSnapshot(messageDoc, (snapshot) => {
+        setMessages(snapshot.docs.map((doc) => doc.data()));
+      });
+    }
   }, [roomId]);
+  console.log(messages);
 
   // finding a random number and assignining to state
   useEffect(() => {
@@ -65,11 +91,16 @@ const Chat = () => {
         </div>
       </div>
       <div className="chat_body">
-        <p className={`chat_message ${true && "chat_reciever"}`}>
-          <span className="chat_name">~User</span>
-          This is a message
-          <span className="chat_timestamp">1:21am</span>
-        </p>
+        {messages.map((message) => (
+          // eslint-disable-next-line react/jsx-key
+          <p className={`chat_message ${true && "chat_reciever"}`}>
+            <span className="chat_name">{message.name}</span>
+            {message.message}
+            <span className="chat_timestamp">
+              {new Date(message.timeStamp?.toDate()).toUTCString()}
+            </span>
+          </p>
+        ))}
       </div>
       <div className="chat_footer">
         <InsertEmoticonIcon />
