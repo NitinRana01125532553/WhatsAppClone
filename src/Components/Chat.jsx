@@ -10,13 +10,17 @@ import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import MicIcon from "@mui/icons-material/Mic";
 import db from "./Firebase";
 import { useParams } from "react-router-dom";
+import { useStateValue } from "../StateProvider";
 import {
+  addDoc,
   collection,
   doc,
   onSnapshot,
   orderBy,
   query,
+  serverTimestamp,
 } from "firebase/firestore";
+import firebase from "firebase/compat/app";
 
 // the actual chat section of users
 const Chat = () => {
@@ -27,6 +31,7 @@ const Chat = () => {
   const { roomId } = useParams();
   const [roomName, setRoomName] = useState("");
   const [messages, setMessages] = useState([]);
+  const [{ user }, dispatch] = useStateValue();
 
   useEffect(() => {
     if (roomId) {
@@ -62,6 +67,20 @@ const Chat = () => {
   const sendMessage = (e) => {
     e.preventDefault();
     console.log("You typed =>", inputMessage);
+    // accessing rooms collection
+    const roomsCol = collection(db, "rooms");
+    // accessing the different room docs inside rooms collection
+    const roomDoc = doc(roomsCol, roomId);
+    // accessing the messages collection inside each room doc
+    const messagesCol = collection(roomDoc, "messages");
+
+    // adding doc inside
+    addDoc(messagesCol, {
+      message: inputMessage,
+      name: user.displayName,
+      timeStamp: serverTimestamp(),
+    });
+
     setInputMessage("");
   };
 
