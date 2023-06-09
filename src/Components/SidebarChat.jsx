@@ -1,7 +1,14 @@
 import { Avatar } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import "./SidebarChat.css";
-import { addDoc, collection } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import db from "./Firebase";
 import { Link } from "react-router-dom";
 
@@ -28,6 +35,22 @@ const SidebarChat = ({ id, addNewChat, name }) => {
     }
   };
 
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    if (id) {
+      const roomsCol = collection(db, "rooms");
+      const roomsDoc = doc(roomsCol, id);
+      const messagesCol = collection(roomsDoc, "messages");
+      const messagesOrder = query(messagesCol, orderBy("timeStamp", "desc"));
+
+      onSnapshot(messagesOrder, (snapshot) =>
+        setMessages(snapshot.docs.map((doc) => doc.data()))
+      );
+    }
+  }, [id]);
+  console.log("This is message: " + messages);
+
   return !addNewChat ? (
     <Link to={`/rooms/${id}`}>
       <div className="sidebar_chat">
@@ -37,7 +60,7 @@ const SidebarChat = ({ id, addNewChat, name }) => {
         />
         <div className="sidebar_chat_info">
           <h3>{name}</h3>
-          <p>Last message....</p>
+          <p>{messages[0]?.message.slice(0, 20)}....</p>
         </div>
       </div>
     </Link>
