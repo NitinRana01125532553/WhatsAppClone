@@ -94,7 +94,12 @@ const Chat = () => {
 
         <div className="chat_header_info">
           <h3>{roomName}</h3>
-          <p>Last seen at ....</p>
+          <p>
+            Last seen at{" "}
+            {new Date(
+              messages[messages.length - 1]?.timeStamp?.toDate()
+            ).toUTCString()}{" "}
+          </p>
         </div>
 
         <div className="chat_header_right">
@@ -112,7 +117,11 @@ const Chat = () => {
       <div className="chat_body">
         {messages.map((message) => (
           // eslint-disable-next-line react/jsx-key
-          <p className={`chat_message ${true && "chat_reciever"}`}>
+          <p
+            className={`chat_message ${
+              message.name === user.displayName && "chat_reciever"
+            }`}
+          >
             <span className="chat_name">{message.name}</span>
             {message.message}
             <span className="chat_timestamp">
